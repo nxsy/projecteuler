@@ -1,0 +1,35 @@
+The nth triangle number is n(n+1)/2.
+
+The number of factors of m*n is the function of the factors of m and n, with an
+upper bound of the product of the number of factors of m and n when m and n do
+not share any factors.
+
+n and n+1 will not have any common factors (other than 1), since common factors
+would require that the two numbers be separated by that number.  Since they
+have no common factors, the total number of factors is the product of the
+number of factors of each.
+
+The division by 2 in the nth triangle number means that 1 (if the number if a
+power of two) or 2 factors are removed from n or n+1, whichever is prime.
+
+The number of factors of a number can be determined by the number of unique
+prime factors of the number and the powers to which these prime factors are
+raised in the prime factor product:
+
+    50 = (2**1) * (5**2)
+
+The number of divisors of a number is the product of the powers of the prime
+factors, each increased by one.  Each factor is the product of none, some, or
+all of the powers of each prime factor.  For the above case, we can choose the
+following combinations:
+
+	factor		power of 2	power of 5	product
+	1		0		0		(2**0) * (5**0)
+	5		0		1		(2**0) * (5**1)
+	25		0		2		(2**0) * (5**2)
+	2		1		0		(2**1) * (5**0)
+	10		1		1		(2**1) * (5**1)
+	50		1		2		(2**1) * (5**2)
+
+numdivisors((a**m) * (b**n) * ...) = (m+1) * (n+1) * ...
+numdivisors((2**1) * (5**2)) = 2 * 3 = 6

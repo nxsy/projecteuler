@@ -27,7 +27,9 @@ Solves problem 12 of Project Euler
     What is the value of the first triangle number to have over five hundred divisors?
 """
 
+import collections
 import itertools
+import operator
 
 def primes_under(number):
     potential_primes = [True] * (number + 1)
@@ -38,7 +40,7 @@ def primes_under(number):
 
     return (i for i,v in enumerate(potential_primes) if v)
 
-primes_under_200000 = list(primes_under(200000))
+_primes = list(primes_under(15000))
 
 def memoize(func):
     cache = {}
@@ -53,32 +55,35 @@ def prime_factors(number):
     if number < 2:
         return []
 
-    if number in primes_under_200000:
+    if number in _primes:
         return [number]
 
-    for prime in primes_under_200000:
+    for prime in _primes:
         divisor, modulo = divmod(number, prime)
         if not modulo:
             return [prime] + prime_factors(divisor)
 
     return []
 
-def num_factors(p_f):
-    factors = set()
-    p_f = list(p_f)
-    for i in xrange(1, len(p_f) + 1):
-        factors.update(itertools.combinations(p_f, i))
+def num_divisors(n):
+    if n < 3:
+        return n
+    if n in _primes:
+        return 2
+    prime_power = collections.defaultdict(int)
+    for f in prime_factors(n):
+        prime_power[f] += 1
 
-    return len(factors)
+    return reduce(operator.mul, ((power+1) for power in prime_power.values()))
 
 def triangle(n):
     return n * (n + 1) / 2
 
-last_num_factors = 0
-for i in range(100000):
-    curr_num_factors = num_factors(prime_factors(i))
-    if last_num_factors * curr_num_factors > 500:
-        if num_factors(prime_factors(triangle(i-1))) > 500:
+last_num_divisors = 0
+for i in range(1, 100000):
+    curr_num_divisors = num_divisors(i)
+    if last_num_divisors * curr_num_divisors > 500:
+        if num_divisors(triangle(i-1)) > 500:
             print triangle(i-1)
             break
-    last_num_factors = curr_num_factors
+    last_num_divisors = curr_num_divisors
